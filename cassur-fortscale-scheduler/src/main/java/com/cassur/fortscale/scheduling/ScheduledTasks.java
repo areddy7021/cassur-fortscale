@@ -9,6 +9,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,20 +45,16 @@ public class ScheduledTasks {
 		RestTemplate restTemplate = new RestTemplate();
 		String fooResourceUrl = "https://52.9.159.233/fortscale-webapp/api";
 		HttpEntity<String> request = new HttpEntity<String>(getHeaders());
-		ResponseEntity<CoreJson> responseEntity = restTemplate.exchange(fooResourceUrl + "/user/", HttpMethod.GET, request, CoreJson.class);
-			for(Data data : responseEntity.getBody().getData()){
-				User user = new User();
-				user.setAdministratorAccount(data.getAdministratorAccount());
-				user.setDisplayName(data.getDisplayName());
-				user.setExecutiveAccount(data.getExecutiveAccount());
-				user.setFollowed(data.getFollowed());
-				user.setId(data.getId());
-				user.setNoDomainUsername(data.getNoDomainUsername());
-				user.setSearchField(data.getSearchField());
-				user.setUsername(data.getUsername());
-				user.setUserServiceAccount(data.getUserServiceAccount());
-				userDao.save(user);
-			}
+		ResponseEntity<String> responseEntity = restTemplate.exchange(fooResourceUrl + "/user/", HttpMethod.GET,
+				request, String.class);
+		JSONObject jsnobject = new JSONObject(responseEntity.getBody());
+		JSONArray jsonArray = jsnobject.getJSONArray("data");
+		for (int i = 0; i < jsonArray.length(); i++) {
+			User user = new User();
+			JSONObject explrObject = jsonArray.getJSONObject(i);
+			user.setData(explrObject.toString());
+			userDao.save(user);
+		}
 	}
 
 	/*

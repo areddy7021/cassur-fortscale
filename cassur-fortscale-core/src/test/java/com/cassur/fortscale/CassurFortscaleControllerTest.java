@@ -127,7 +127,7 @@ JSONAssert.assertEquals(
         long id = getResourceIdFromUrl(result.getResponse().getRedirectedUrl());
 
         User r2 = mockUser("shouldCreateAndUpdate2");
-        r2.setId(Long.toString(id));
+        r2.setId(id);
         byte[] r2Json = toJson(r2);
 
         //UPDATE

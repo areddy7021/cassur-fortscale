@@ -2,10 +2,14 @@ package com.cassur.fortscale.domain;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * An entity User composed by three fields (id, email, name). The Entity
@@ -21,94 +25,43 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String id;
-    
-	private String administratorAccount;
+	private long id;
+	
+	private String data;
+	
+	@Column(name = "created_at", columnDefinition="DATETIME")
+	@Temporal(TemporalType.DATE)
+	private Date createdAt;
 
-	private String executiveAccount;
-
-	private String userServiceAccount;
-
-	private String displayName;
-
-	private String username;
-
-	private String noDomainUsername;
-
-	private String followed;
-
-	private String searchField;
-
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public String getAdministratorAccount() {
-		return administratorAccount;
+	public String getData() {
+		return data;
 	}
 
-	public void setAdministratorAccount(String administratorAccount) {
-		this.administratorAccount = administratorAccount;
+	public void setData(String data) {
+		this.data = data;
 	}
 
-	public String getExecutiveAccount() {
-		return executiveAccount;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setExecutiveAccount(String executiveAccount) {
-		this.executiveAccount = executiveAccount;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public String getUserServiceAccount() {
-		return userServiceAccount;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
+	
+	
 
-	public void setUserServiceAccount(String userServiceAccount) {
-		this.userServiceAccount = userServiceAccount;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getNoDomainUsername() {
-		return noDomainUsername;
-	}
-
-	public void setNoDomainUsername(String noDomainUsername) {
-		this.noDomainUsername = noDomainUsername;
-	}
-
-	public String getFollowed() {
-		return followed;
-	}
-
-	public void setFollowed(String followed) {
-		this.followed = followed;
-	}
-
-	public String getSearchField() {
-		return searchField;
-	}
-
-	public void setSearchField(String searchField) {
-		this.searchField = searchField;
-	}
-
-} // class User
+	
+} 
