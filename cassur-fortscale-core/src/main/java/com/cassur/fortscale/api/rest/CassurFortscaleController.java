@@ -46,7 +46,6 @@ public class CassurFortscaleController extends AbstractRestHandler {
                                       @ApiParam(value = "Tha page size", required = true)
                                       @RequestParam(value = "size", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer size,
                                       HttpServletRequest request, HttpServletResponse response) {
-    	System.out.println("teh use is "+page);
         return this.userService.getAllUsers(page, size);
     }
 

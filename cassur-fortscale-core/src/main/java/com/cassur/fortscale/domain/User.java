@@ -2,7 +2,8 @@ package com.cassur.fortscale.domain;
 
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * An entity User composed by three fields (id, email, name). The Entity
@@ -29,9 +32,10 @@ public class User implements Serializable {
 	
 	private String data;
 	
-	@Column(name = "created_at", columnDefinition="DATETIME")
-	@Temporal(TemporalType.DATE)
-	private Date createdAt;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy hh:mm:ss")
+	private java.util.Date createdAt;
 
 	public long getId() {
 		return id;
@@ -49,16 +53,16 @@ public class User implements Serializable {
 		this.data = data;
 	}
 
-	public Date getCreatedAt() {
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public java.util.Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(java.util.Date createdAt) {
 		this.createdAt = createdAt;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 	
 	

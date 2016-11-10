@@ -1,6 +1,7 @@
 package com.cassur.fortscale.scheduling.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -23,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author netgloo
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users_fortscale")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -34,14 +35,14 @@ public class User implements Serializable {
 	@Column(columnDefinition="JSON")
 	@JsonProperty("data")
 	private String data;
-	
-	@Column(name="created_at", nullable=false)
+
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date createdAt;
+	@Column(name = "created_at")
+	private java.util.Date createdAt;
 
 	@PrePersist
 	protected void onCreate() {
-	    createdAt = new Date();
+	    createdAt = new Timestamp((new Date()).getTime());
 	}
 	
 
@@ -66,15 +67,23 @@ public class User implements Serializable {
 	}
 
 
-	public Date getCreatedAt() {
+	public java.util.Date getCreatedAt() {
 		return createdAt;
 	}
 
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(java.util.Date createdAt) {
 		this.createdAt = createdAt;
 	}
-
 	
+	
+
+//	public java.sql.Timestamp getCreatedAt() {
+//		return createdAt;
+//	}
+//
+//	public void setCreatedAt(java.sql.Timestamp createdAt) {
+//		this.createdAt = createdAt;
+//	}
 	
 } 

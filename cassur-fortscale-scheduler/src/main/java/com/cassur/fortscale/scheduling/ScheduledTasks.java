@@ -23,6 +23,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.cassur.fortscale.scheduling.model.CassurUser;
+import com.cassur.fortscale.scheduling.model.CassurUserDao;
+import com.cassur.fortscale.scheduling.model.Client;
+import com.cassur.fortscale.scheduling.model.Uba;
+import com.cassur.fortscale.scheduling.model.UbaDao;
 import com.cassur.fortscale.scheduling.model.User;
 import com.cassur.fortscale.scheduling.model.UserDao;
 
@@ -53,7 +58,25 @@ public class ScheduledTasks {
 			User user = new User();
 			JSONObject explrObject = jsonArray.getJSONObject(i);
 			user.setData(explrObject.toString());
-			userDao.save(user);
+			user = userDao.save(user);
+			CassurUser cassurUser = new CassurUser();
+			cassurUser.setClientId(1234);
+			cassurUser.setUserName(explrObject.getString("username"));
+			cassurUser.setDateTime(user.getCreatedAt());
+			
+			Uba uba = new Uba();
+			uba.setDateTime(user.getCreatedAt());
+			uba.setUserId(cassurUser.getUserId());
+			uba.setDateTime(user.getCreatedAt());
+			uba.setUserRiskScore(33);
+			cassurUser.setUba(uba);
+			Client client = new Client();
+			client.setClientId(1234);
+			client.setClientName(explrObject.getString("username"));
+			client.setClientShortName(explrObject.getString("firstname"));
+			cassurUser.setClient(client);
+			cassurUser = cassurUserDao.save(cassurUser);
+			//ubaDao.save(uba);
 		}
 	}
 
@@ -73,4 +96,10 @@ public class ScheduledTasks {
 
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private UbaDao ubaDao;
+	
+	@Autowired
+	private CassurUserDao cassurUserDao;
 }
