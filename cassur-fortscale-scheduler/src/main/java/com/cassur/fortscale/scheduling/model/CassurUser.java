@@ -2,24 +2,19 @@ package com.cassur.fortscale.scheduling.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
-/**
- * An entity User composed by three fields (id, email, name). The Entity
- * annotation indicates that this class is a JPA entity. The Table annotation
- * specifies the name for the table in the db.
- *
- * @author netgloo
- */
 @Entity
 @Table(name = "users")
 public class CassurUser implements Serializable {
@@ -40,12 +35,23 @@ public class CassurUser implements Serializable {
 	@Column(name = "Date_Time")
 	private java.util.Date dateTime;
 	
+	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+	@JoinColumn(name="User_ID", insertable=false, updatable=false)
 	private Uba uba;
-	
-    @OneToOne
-	@PrimaryKeyJoinColumn
+
+	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+	@JoinColumn(name="Client_ID", insertable=false, updatable=false)
 	private Client client;
 
+	
+	@Column(name = "display_name")
+	private String displayName;
+	
+	@Column(name = "first_name")
+	private String firstName;
+	
+	@Column(name = "last_name")
+	private String lastName;
 	
 	public int getUserId() {
 		return userId;
@@ -79,14 +85,6 @@ public class CassurUser implements Serializable {
 		this.dateTime = dateTime;
 	}
 
-	public Uba getUba() {
-		return uba;
-	}
-
-	public void setUba(Uba uba) {
-		this.uba = uba;
-	}
-
 	public Client getClient() {
 		return client;
 	}
@@ -94,7 +92,30 @@ public class CassurUser implements Serializable {
 	public void setClient(Client client) {
 		this.client = client;
 	}
-	
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	
 	
 } 

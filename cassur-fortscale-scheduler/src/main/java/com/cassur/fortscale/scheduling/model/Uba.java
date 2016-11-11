@@ -6,9 +6,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -30,16 +32,19 @@ public class Uba implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-	@Column(name = "uba_id")
+	@Column(name = "UBA_ID")
 	@GeneratedValue(strategy=GenerationType.AUTO) 
 	private int ubaId;
 	
-	@Column(name = "user_id")
+	@Column(name = "User_Id")
 	private int userId;
 	
-	@Column(name = "user_risk_score")
+	@Column(name = "User_Risk_Score")
 	private int userRiskScore;
-    
+	
+	@OneToOne(fetch=FetchType.LAZY, mappedBy="uba")
+	public CassurUser cassurUser;
+
 	public int getUserRiskScore() {
 		return userRiskScore;
 	}
@@ -49,7 +54,7 @@ public class Uba implements Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_time")
+	@Column(name = "Date_Time")
 	private java.util.Date dateTime;
 
 	public int getUbaId() {
@@ -68,8 +73,6 @@ public class Uba implements Serializable {
 		this.userId = userId;
 	}
 
-	
-
 	public java.util.Date getDateTime() {
 		return dateTime;
 	}
@@ -80,6 +83,14 @@ public class Uba implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public CassurUser getCassurUser() {
+		return cassurUser;
+	}
+
+	public void setCassurUser(CassurUser cassurUser) {
+		this.cassurUser = cassurUser;
 	}
 
 	

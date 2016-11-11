@@ -13,6 +13,8 @@ import javax.net.ssl.X509TrustManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.cassur.fortscale.scheduling.model.Uba;
+
 @Configuration
 class FortscaleSchedulerConfig {
 	@Bean
@@ -43,4 +45,5 @@ class FortscaleSchedulerConfig {
 
 		return true;
 	}
+
 }

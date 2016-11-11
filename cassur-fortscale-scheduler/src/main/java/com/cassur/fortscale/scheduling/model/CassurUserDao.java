@@ -16,7 +16,7 @@ import com.cassur.fortscale.scheduling.model.User;
  * @author netgloo
  */
 @Transactional
-public interface CassurUserDao extends CrudRepository<CassurUser, Long> {
+public interface CassurUserDao extends CrudRepository<CassurUser, Integer> {
 
   /**
    * Return the user having the passed email or null if no user is found.

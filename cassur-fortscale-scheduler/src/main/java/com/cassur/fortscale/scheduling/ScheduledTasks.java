@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,20 +39,27 @@ public class ScheduledTasks {
 	private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+	
+	@Value("${cassur.fortscale.rest.api.url}")
+    private String url; 
+	
+	@Value("${cassur.fortscale.rest.api.url.auth.username}")
+    private String userName; 
+	
+	@Value("${cassur.fortscale.rest.api.url.auth.password}")
+    private String password; 
 
 	@Scheduled(fixedRate = 500000)
-	public void reportCurrentTime() {
+	public void populateData() {
 		log.info("The time is now {}", dateFormat.format(new Date()));
-
 		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
 			public boolean verify(String hostname, SSLSession session) {
 				return true;
 			}
 		});
 		RestTemplate restTemplate = new RestTemplate();
-		String fooResourceUrl = "https://52.9.159.233/fortscale-webapp/api";
-		HttpEntity<String> request = new HttpEntity<String>(getHeaders());
-		ResponseEntity<String> responseEntity = restTemplate.exchange(fooResourceUrl + "/user/", HttpMethod.GET,
+		HttpEntity<String> request = new HttpEntity<String>(getHeaders(getUserName()+":"+getPassword()));
+		ResponseEntity<String> responseEntity = restTemplate.exchange(getUrl() + "/user/", HttpMethod.GET,
 				request, String.class);
 		JSONObject jsnobject = new JSONObject(responseEntity.getBody());
 		JSONArray jsonArray = jsnobject.getJSONArray("data");
@@ -63,20 +72,22 @@ public class ScheduledTasks {
 			cassurUser.setClientId(1234);
 			cassurUser.setUserName(explrObject.getString("username"));
 			cassurUser.setDateTime(user.getCreatedAt());
-			
+			cassurUser.setDisplayName(explrObject.getString("displayName"));
+			cassurUser.setUserName(explrObject.getString("username"));
+			cassurUser.setFirstName((explrObject.getJSONObject("adInfo").isNull("firstname") ? "" : explrObject.getJSONObject("adInfo").getString("firstname")));
+			cassurUser.setLastName((explrObject.getJSONObject("adInfo").isNull("lastname") ? "" : explrObject.getJSONObject("adInfo").getString("lastname")));
+			Client client = new Client();
+			client.setClientId(1234 + i);
+			client.setClientName(explrObject.getString("username"));
+			client.setClientShortName(explrObject.getString("displayName"));
+			cassurUser.setClient(client);
+			cassurUser = cassurUserDao.save(cassurUser);
 			Uba uba = new Uba();
 			uba.setDateTime(user.getCreatedAt());
 			uba.setUserId(cassurUser.getUserId());
 			uba.setDateTime(user.getCreatedAt());
 			uba.setUserRiskScore(33);
-			cassurUser.setUba(uba);
-			Client client = new Client();
-			client.setClientId(1234);
-			client.setClientName(explrObject.getString("username"));
-			client.setClientShortName(explrObject.getString("firstname"));
-			cassurUser.setClient(client);
-			cassurUser = cassurUserDao.save(cassurUser);
-			//ubaDao.save(uba);
+			uba = ubaDao.save(uba);
 		}
 	}
 
@@ -84,10 +95,8 @@ public class ScheduledTasks {
 	 * Add HTTP Authorization header, using Basic-Authentication to send
 	 * user-credentials.
 	 */
-	private static HttpHeaders getHeaders() {
-		String plainCredentials = "admin@fortscale.com:T@fhvusu42";
+	private static HttpHeaders getHeaders(String plainCredentials) {
 		String base64Credentials = new String(Base64.encodeBase64(plainCredentials.getBytes()));
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Credentials);
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -102,4 +111,17 @@ public class ScheduledTasks {
 	
 	@Autowired
 	private CassurUserDao cassurUserDao;
+
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+	
 }

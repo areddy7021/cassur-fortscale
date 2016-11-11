@@ -39,6 +39,8 @@ public class User implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
 	private java.util.Date createdAt;
+	
+	
 
 	@PrePersist
 	protected void onCreate() {
@@ -75,15 +77,5 @@ public class User implements Serializable {
 	public void setCreatedAt(java.util.Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	
-	
 
-//	public java.sql.Timestamp getCreatedAt() {
-//		return createdAt;
-//	}
-//
-//	public void setCreatedAt(java.sql.Timestamp createdAt) {
-//		this.createdAt = createdAt;
-//	}
-	
 } 

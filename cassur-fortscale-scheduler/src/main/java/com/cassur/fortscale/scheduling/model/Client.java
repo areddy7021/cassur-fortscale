@@ -2,11 +2,11 @@ package com.cassur.fortscale.scheduling.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 /**
@@ -20,17 +20,17 @@ import javax.persistence.Table;
 @Table(name = "client")
 public class Client implements Serializable {
 
+	@Id
 	@Column(name = "Client_ID")
 	private int clientId;
 
-	@Column(name = "Client_ShortName")
+	@Column(name = "Client_Short_Name")
 	private String clientShortName;
 
 	@Column(name = "Client_Name")
 	private String clientName;
 
-	@OneToOne(cascade=CascadeType.ALL)  
-	@PrimaryKeyJoinColumn  
+	@OneToOne(fetch=FetchType.LAZY, mappedBy="client")
 	public CassurUser cassurUser;
 
 	public int getClientId() {
